@@ -11,7 +11,7 @@ set (TEST_LIBRARIES ${UTILS_LIBRARY})
 set (HSA_LIBRARIES ${HSA_RUNTIME_LIBRARY})
 
 ## System libraries.
-set (SYSTEM_LIBRARIES check rt m pthread)
+set (SYSTEM_LIBRARIES check subunit rt m pthread)
 
 ## Coding standard used.
 set (C_STANDARD "-std=c99")

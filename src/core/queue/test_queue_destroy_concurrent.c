@@ -74,10 +74,10 @@
 
 static int m_queues;
 
-hsa_queue_t **queues;
+hsa_queue_t **dqueues;
 
 typedef struct queue_destroy_params {
-    hsa_queue_t** queues;
+    hsa_queue_t** dqueues;
     int count;
 } queue_destroy_params_t;
 
@@ -90,7 +90,7 @@ void test_destroy_queue(void *data) {
     queue_destroy_params_t* params = (queue_destroy_params_t*)data;
 
     for (ii = 0; ii < params->count; ++ii) {
-        status = hsa_queue_destroy(params->queues[ii]);
+        status = hsa_queue_destroy(params->dqueues[ii]);
         ASSERT(HSA_STATUS_SUCCESS == status);
     }
 }
@@ -113,12 +113,12 @@ int test_queue_destroy_concurrent() {
         ASSERT(HSA_STATUS_SUCCESS == status);
 
         // Allocate queue pointers for current agent.
-        queues = (hsa_queue_t **) malloc(sizeof(hsa_queue_t *) * queue_max);
-        memset(queues, 0, sizeof(hsa_queue_t*) * queue_max);
+        dqueues = (hsa_queue_t **) malloc(sizeof(hsa_queue_t *) * queue_max);
+        memset(dqueues, 0, sizeof(hsa_queue_t*) * queue_max);
 
         // Create queues on current agent.
         for (jj = 0; jj < queue_max; ++jj) {
-            status = hsa_queue_create(agent_list.agents[ii], 4, HSA_QUEUE_TYPE_SINGLE, NULL, NULL, UINT32_MAX, UINT32_MAX, &queues[jj]);
+            status = hsa_queue_create(agent_list.agents[ii], 4, HSA_QUEUE_TYPE_SINGLE, NULL, NULL, UINT32_MAX, UINT32_MAX, &dqueues[jj]);
             if (HSA_STATUS_SUCCESS != status) {
                 ASSERT(HSA_STATUS_ERROR_OUT_OF_RESOURCES == status);
                 queue_max = jj;
@@ -138,7 +138,7 @@ int test_queue_destroy_concurrent() {
         }
         int total_count = 0;
         for (k = 0; k < N_THREADS; ++k) {
-            params[k].queues = &(queues[total_count]);
+            params[k].dqueues = &(dqueues[total_count]);
             total_count += params[k].count;
         }
 
@@ -154,7 +154,7 @@ int test_queue_destroy_concurrent() {
         test_group_exit(tg_concurrent_create_queue);
         test_group_destroy(tg_concurrent_create_queue);
 
-        free(queues);
+        free(dqueues);
     }
 
     // Shutdown runtime

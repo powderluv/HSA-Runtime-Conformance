@@ -1,6 +1,6 @@
 project (hsa_conformance C)
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.16)
 
 ## Windows is currently not supported. Disable windows builds.
 if(WIN32)
@@ -45,7 +45,7 @@ include (init)
 include (memory)
 include (atomics)
 include (queue)
-include (signals)
+#include (signals)
 include (ext_api)
 include (finalization)
 include (image_clear)
